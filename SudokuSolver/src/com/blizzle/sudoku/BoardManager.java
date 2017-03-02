@@ -14,9 +14,10 @@ import javax.swing.JPanel;
 public class BoardManager {
 	private static class SudokuPanel extends JPanel {
 
-        int digit;
-        int x, y;
-
+        private int digit;
+        private int x, y;
+        private boolean isFixed;
+        
         JLabel label;
         
         SudokuPanel(int x, int y) {
@@ -24,6 +25,7 @@ public class BoardManager {
 
             this.x = x;
             this.y = y;
+            this.isFixed = false;
 
             /** create a black border */
             setBorder(BorderFactory.createLineBorder(Color.black));
@@ -41,24 +43,38 @@ public class BoardManager {
 
         public void setDigit(int num, boolean bold) { 
         	digit = num;
-        	this.label.setText(Integer.toString(num));
+        	
+        	if (num < 0) {
+        		this.label.setText("");
+        	} else {
+        		this.label.setText(Integer.toString(num));
+        	}
         	
         	if (bold) {
         		this.label.setFont(new Font("Courier", Font.BOLD,18));
+        		this.isFixed = true;
         	} else {
         		this.label.setFont(new Font("Courier", Font.PLAIN,12));
+        		this.isFixed = false;
         	}
         }
-
+        
+        public boolean isFixed() {
+        	return this.isFixed;
+        }
     }
 	
 	private static class SudokuGrid extends JPanel {
 		private SudokuPanel[][] board;
+		private int width;
+		private int height;
 		
         SudokuGrid(int w, int h) {
             super(new GridBagLayout());
 
-            board = new SudokuPanel[w][h];
+            this.board = new SudokuPanel[w][h];
+            this.width = w;
+            this.height = h;
             
             GridBagConstraints c = new GridBagConstraints();
             /** construct the grid */
@@ -83,6 +99,19 @@ public class BoardManager {
         public void setValue(int x, int y, int v, boolean bold) {
         	board[x][y].setDigit(v, bold);
         }
+        
+        public void clearAfter(int x, int y) {
+        	for (int i = x; i < this.width; i++) {
+        		int j = i == x ? y + 1 : 0;
+        		while (j < this.height) {
+        			if (!board[i][j].isFixed()) {
+        				this.setValue(i, j, -1, false);
+        			}
+        			j++;
+        		}
+        	}
+        	
+        }
     }
 	
 	private SudokuGrid sudokuGrid;
@@ -103,5 +132,9 @@ public class BoardManager {
 	
     public void setValue(int x, int y, int v, boolean bold) {
     	sudokuGrid.setValue(x, y, v, bold);
+    }
+    
+    public void clearAfter(int x, int y) {
+    	sudokuGrid.clearAfter(x, y);
     }
 }

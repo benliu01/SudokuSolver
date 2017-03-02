@@ -91,10 +91,11 @@ public class Solver {
 			char[][] copy = copyBoard(board);
 			copy[firstEmptyCoords[0]][firstEmptyCoords[1]] = nextAvailableForFirstEmpty;
 			display.setValue(firstEmptyCoords[0], firstEmptyCoords[1], Character.getNumericValue(nextAvailableForFirstEmpty), false);
-//			try {
-//				Thread.sleep(10);
-//			} catch (InterruptedException e) {
-//			}
+			display.clearAfter(firstEmptyCoords[0], firstEmptyCoords[1]);
+			try {
+				Thread.sleep(5);
+			} catch (InterruptedException e) {
+			}
 			result = solveSudokuHelper(copy, copyFloors(floors), display);
 		}
 
