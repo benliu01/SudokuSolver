@@ -1,2 +1,6 @@
 SudokuSolver/bin
+.metadata
+SudokuSolver/.classpath
+SudokuSolver/.project
+SudokuSolver/.settings
 
