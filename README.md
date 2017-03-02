@@ -1,2 +1,2 @@
 # SudokuSolver
-Simple Sudoku solver
+Simple Sudoku solver and visualization of the recursive solving function.
